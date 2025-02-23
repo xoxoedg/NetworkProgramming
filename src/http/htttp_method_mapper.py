@@ -1,4 +1,4 @@
-from http_helper.http_method import HttpMethod
+from src.http.http_method import HttpMethod
 
 
 class HttpMethodMapper:

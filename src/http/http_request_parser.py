@@ -1,4 +1,4 @@
-from http_helper.htttp_method_mapper import HttpMethodMapper
+from src.http.htttp_method_mapper import HttpMethodMapper
 
 
 class HttpRequestParser:
