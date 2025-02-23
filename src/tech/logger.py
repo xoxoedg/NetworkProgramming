@@ -19,5 +19,5 @@ class Logger:
         self.logger.addHandler(stream_handler)
         self.logger.addHandler(file_handler)
 
-    def get_logger(self):
+    def get_logger(self)-> logging.Logger:
         return self.logger

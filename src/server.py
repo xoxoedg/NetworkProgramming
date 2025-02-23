@@ -1,28 +1,33 @@
 from socket import *
 import logging
+from typing import Tuple, TextIO
 
 from src.tech.logger import Logger
 
-logger = Logger(__name__).get_logger()
+logger: Logger = Logger(__name__).get_logger()
 
-server_port = 34000
-serverSocket = socket(AF_INET, SOCK_STREAM)
+server_port : int = 34000
+serverSocket : socket = socket(AF_INET, SOCK_STREAM)
 serverSocket.bind(("0.0.0.0", server_port))
 serverSocket.listen(1)
 
 while True:
 
-    logger.info('Ready to serve...')
+    logger.debug("Waiting for connection...")
+    connectionSocket: socket
+    addr: Tuple[str, int]
     connectionSocket, addr = serverSocket.accept()
+    ip: str
+    port: int
     ip, port = addr
 
     logger.info("Accepting request from address: " + ip)
     try:
-        message = connectionSocket.recv(1024).decode()
-        print(message)
-        filename = message.split()[1]
-        f = open(filename[1:])
-        outputdata = f.read()
+        message: str = connectionSocket.recv(1024).decode()
+
+        filename: str = message.split()[1]
+        f: TextIO = open(filename[1:])
+        outputdata: str = f.read()
         connectionSocket.send("HTTP/1.1 200 OK\r\n\r\n".encode())
         connectionSocket.send("\r\n".encode())
         connectionSocket.sendall(outputdata.encode())
