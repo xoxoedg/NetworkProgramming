@@ -31,6 +31,6 @@ while True:
         logging.error("Error while sending data" + e.message)
         connectionSocket.send("HTTP/1.1 404 Not Found\r\n\r\n".encode())
         connectionSocket.close()
-    
+
 serverSocket.close()
 sys.exit()
