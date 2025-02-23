@@ -1,7 +1,7 @@
 from socket import *
 import logging
 
-from tech.logger import Logger
+from src.tech.logger import Logger
 
 logger = Logger(__name__).get_logger()
 
