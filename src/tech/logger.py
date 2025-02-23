@@ -1,7 +1,8 @@
 import logging
 
-class Logger():
-    def __init__(self, module_name, filename = 'server.log'):
+
+class Logger:
+    def __init__(self, module_name, filename="server.log"):
         self.module_name = module_name
         self.filename = filename
         self.logger = logging.getLogger(self.module_name)
@@ -11,7 +12,7 @@ class Logger():
         file_handler = logging.FileHandler(self.filename)
         file_handler.setLevel(logging.INFO)
 
-        formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+        formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
         stream_handler.setFormatter(formatter)
         file_handler.setFormatter(formatter)
 
@@ -20,5 +21,3 @@ class Logger():
 
     def get_logger(self):
         return self.logger
-
-
