@@ -1,19 +1,19 @@
-from socket import *
 import logging
+from socket import *
 from typing import Tuple, TextIO
 
 from src.tech.logger import Logger
 
-logger: Logger = Logger(__name__).get_logger()
+logger: Logger = Logger(__name__)
 
-server_port : int = 34000
-serverSocket : socket = socket(AF_INET, SOCK_STREAM)
+server_port: int = 34000
+serverSocket: socket = socket(AF_INET, SOCK_STREAM)
 serverSocket.bind(("0.0.0.0", server_port))
 serverSocket.listen(1)
 
 while True:
 
-    logger.debug("Waiting for connection...")
+    logger.logger.info("Waiting for connection...")
     connectionSocket: socket
     addr: Tuple[str, int]
     connectionSocket, addr = serverSocket.accept()
@@ -21,7 +21,7 @@ while True:
     port: int
     ip, port = addr
 
-    logger.info("Accepting request from address: " + ip)
+    logger.logger.info("Accepting request from address: " + ip)
     try:
         message: str = connectionSocket.recv(1024).decode()
 
@@ -33,9 +33,9 @@ while True:
         connectionSocket.sendall(outputdata.encode())
         connectionSocket.close()
     except IOError as e:
-        logging.error("Error while sending data" + e.message)
+        logging.error("Error while sending data" + str(e))
         connectionSocket.send("HTTP/1.1 404 Not Found\r\n\r\n".encode())
         connectionSocket.close()
 
 serverSocket.close()
-sys.exit()
+exit(0)
