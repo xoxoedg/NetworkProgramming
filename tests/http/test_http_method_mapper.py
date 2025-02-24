@@ -14,11 +14,13 @@ from src.http.htttp_method_mapper import HttpMethodMapper
         ("HEAD", HttpMethod.HEAD),
     ],
 )
-def test_map_http_method_valid(http_request_method, expected_http_method):
+def test_map_http_method_valid(
+        http_request_method: str, expected_http_method: HttpMethod
+) -> None:
     assert HttpMethodMapper.map(http_request_method) == expected_http_method
 
 
 @pytest.mark.parametrize("http_request_method", ["PATCH", "OPTIONS", "CONNECT"])
-def test_map_http_method_invalid(http_request_method):
+def test_map_http_method_invalid(http_request_method: str) -> None:
     with pytest.raises(ValueError, match="Unknown HTTP request method"):
         HttpMethodMapper.map(http_request_method)

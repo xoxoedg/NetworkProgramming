@@ -2,9 +2,8 @@ from src.http.http_method import HttpMethod
 
 
 class HttpMethodMapper:
-
     @staticmethod
-    def map(http_request_method : str) -> HttpMethod:
+    def map(http_request_method: str) -> HttpMethod:
         match http_request_method:
             case "GET":
                 return HttpMethod.GET

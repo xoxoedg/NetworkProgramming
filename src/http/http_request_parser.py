@@ -1,6 +1,15 @@
+from typing import Dict, List, TypedDict
+
 from src.http.http_method import HttpMethod
 from src.http.htttp_method_mapper import HttpMethodMapper
-from typing import Dict, Union, List
+
+
+class HttpRequestDict(TypedDict):
+    method: HttpMethod
+    url: str
+    version: str
+    headers: Dict[str, str]
+    body: str
 
 
 class HttpRequestParser:
@@ -9,12 +18,12 @@ class HttpRequestParser:
 
     def __init__(self, filename: str):
         self.filename: str = filename
-        self.http_request_dict: Dict[str, Union[HttpMethod, str, Dict[str, str]]] = {
+        self.http_request_dict: HttpRequestDict = {
             "method": HttpMethod.GET,
             "url": "",
             "version": "",
             "headers": {},
-            "body": {},
+            "body": "",
         }
         self.headers_lines: List[str] = []
         self.http_request_split_by_newline: List[str] = []
@@ -22,13 +31,15 @@ class HttpRequestParser:
     def parse(self) -> None:
         http_request: str = self.get_file_content()
         # ['GET / HTTP/1.1', 'Host: example.com', 'User-Agent: MyApp/1.0', 'Accept: application/json', 'Authorization: Bearer your_token_here', 'X-Custom-Header: CustomValue']
-        self.http_request_split_by_newline: List[str] = http_request.split(self.LINE_FEED)
+        self.http_request_split_by_newline = http_request.split(self.LINE_FEED)
         self.parse_request_line()
         self.parse_header()
         self.parse_body()
 
     def parse_request_line(self) -> None:
-        separated_request_line: List[str] = self.http_request_split_by_newline[0].split()
+        separated_request_line: List[str] = self.http_request_split_by_newline[
+            0
+        ].split()
         http_method = separated_request_line[0]
         http_url = separated_request_line[1]
         http_version = separated_request_line[2]
@@ -39,13 +50,15 @@ class HttpRequestParser:
 
     def parse_header(self) -> None:
         # ['Host: example.com', 'User-Agent: MyApp/1.0', 'Accept: application/json', 'Authorization: Bearer your_token_here', 'X-Custom-Header: CustomValue']
-        self.headers_lines: List[str] = self.parse_all_header_lines_into_list()
+        self.headers_lines = self.parse_all_header_lines_into_list()
         # 'Host: example.com'
         for header_line in self.headers_lines:
             if ":" in header_line:
                 header_name, header_value = header_line.split(":", 1)
 
-                self.http_request_dict["headers"][header_name.strip()] = header_value.strip()
+                self.http_request_dict["headers"][
+                    header_name.strip()
+                ] = header_value.strip()
 
     def parse_all_header_lines_into_list(self) -> List[str]:
         header_lines: List[str] = []
@@ -57,7 +70,9 @@ class HttpRequestParser:
 
     def parse_body(self) -> None:
         header_lines_size: int = len(self.headers_lines)
-        http_request_split_by_newline_size: int = len(self.http_request_split_by_newline)
+        http_request_split_by_newline_size: int = len(
+            self.http_request_split_by_newline
+        )
         body_start_index: int = header_lines_size + 2  # Skip empty line
         if body_start_index < http_request_split_by_newline_size:
             self.http_request_dict["body"] = self.modify_body(
